@@ -1,4 +1,4 @@
-# Bu router, tum API rotalarini tek bir agac altinda birlestirir.
+# API router — Tüm route'ları birleştir
 
 from fastapi import APIRouter
 
@@ -10,6 +10,7 @@ from app.api.routes.health import router as health_router
 from app.api.routes.integrations import router as integrations_router
 from app.api.routes.retrieval import router as retrieval_router
 from app.api.routes.runs import router as runs_router
+from app.api.routes.storage import router as storage_router
 
 api_router = APIRouter()
 api_router.include_router(health_router)
@@ -17,6 +18,7 @@ api_router.include_router(auth_router)
 api_router.include_router(catalog_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(documents_router)
+api_router.include_router(storage_router)
 api_router.include_router(retrieval_router)
 api_router.include_router(integrations_router)
 api_router.include_router(runs_router)

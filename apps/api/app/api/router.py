@@ -8,8 +8,8 @@ from app.api.routes.dashboard import router as dashboard_router
 # from app.api.routes.documents import router as documents_router  # DEPRECATED: Azure Document Intelligence removed
 from app.api.routes.health import router as health_router
 from app.api.routes.integrations import router as integrations_router
-from app.api.routes.retrieval import router as retrieval_router
-from app.api.routes.runs import router as runs_router
+# from app.api.routes.retrieval import router as retrieval_router  # DEPRECATED: Azure Cognitive Search removed
+# from app.api.routes.runs import router as runs_router  # DEPRECATED: LangGraph orchestration removed
 from app.api.routes.storage import router as storage_router
 
 api_router = APIRouter()
@@ -19,6 +19,6 @@ api_router.include_router(catalog_router)
 api_router.include_router(dashboard_router)
 # api_router.include_router(documents_router)  # DEPRECATED: Azure Document Intelligence removed
 api_router.include_router(storage_router)
-api_router.include_router(retrieval_router)
+# api_router.include_router(retrieval_router)  # DEPRECATED: Azure Cognitive Search removed
 api_router.include_router(integrations_router)
-api_router.include_router(runs_router)
+# api_router.include_router(runs_router)  # DEPRECATED: LangGraph orchestration removed

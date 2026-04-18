@@ -1,28 +1,28 @@
-# Bu servis, blob_storage akisindaki uygulama mantigini tek yerde toplar.
+"""
+Blob Storage Service — DEPRECATED (use app.services.storage instead)
+
+This file is kept for backward compatibility during migration from Azure to MinIO.
+Azure dependencies removed. Use StorageManager from app.services.storage.
+"""
 
 from __future__ import annotations
-
-from dataclasses import dataclass
-from pathlib import Path
-from urllib.parse import urlparse
 from typing import Protocol
+import logging
 
-from azure.identity import DefaultAzureCredential
-from azure.storage.blob import BlobServiceClient, ContentSettings
+logger = logging.getLogger(__name__)
 
-from app.core.settings import settings
+# Azure imports removed - use app.services.storage instead
 
 
 class BlobStorageService(Protocol):
-    def upload_bytes(
-        self,
-        payload: bytes,
-        blob_name: str,
-        content_type: str | None,
-        container: str | None = None,
-    ) -> str: ...
+    """Stub protocol (deprecated)"""
+    def upload_bytes(self, payload: bytes, blob_name: str, content_type: str | None, container: str | None = None) -> str:
+        """Deprecated: Use StorageManager.upload_file() instead"""
+        ...
 
-    def download_bytes(self, storage_uri: str) -> bytes: ...
+    def download_bytes(self, storage_uri: str) -> bytes:
+        """Deprecated: Use StorageManager.download_file() instead"""
+        ...
 
 
 @dataclass

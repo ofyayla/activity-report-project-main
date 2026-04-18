@@ -1,46 +1,30 @@
-# Bu servis, integrations ve connector support operasyonlarini tek yerde toplar.
+"""
+Integrations Service — DEPRECATED (connector-agent removed)
+
+This file is kept for backward compatibility during migration.
+All connector/integrations functionality is being removed per CLAUDE.md section 5.
+
+Use app.services.storage instead for file operations.
+"""
 
 from __future__ import annotations
-
-from dataclasses import dataclass
-from datetime import datetime, timezone
-import hashlib
-from io import BytesIO
-import json
 from typing import Any
-from zipfile import ZIP_DEFLATED, ZipFile
+import logging
+from datetime import datetime, timezone
 
-from sqlalchemy import or_, select
-from sqlalchemy.orm import Session
+logger = logging.getLogger(__name__)
 
-from app.core.settings import settings
-from app.models.core import (
-    CanonicalFact,
-    ConnectorAgent,
-    ConnectorArtifact,
-    ConnectorOperationRun,
-    ConnectorSyncJob,
-    IntegrationConfig,
-)
-from app.services.blob_storage import get_blob_storage_service
-from app.services.connector_contract import (
-    SUPPORT_MATRIX_VERSION,
-    build_default_connection_profile,
-    build_default_normalization_policy,
-    contains_secret_literal,
-    get_default_product_version,
-    get_default_variant_code,
-    get_support_definition,
-    missing_required_profile_fields,
-    replay_mode_supported,
-    resolve_support_tier,
-    summarize_health,
-    support_error_payload,
-)
+# All legacy connector code removed - keeping only stubs for backward compatibility
 
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def get_assigned_agent_status(*, db: Any, integration: Any = None, agent_id: str | None = None) -> str | None:
+    """Stub: connector-agent functionality removed per CLAUDE.md section 5"""
+    logger.warning("get_assigned_agent_status() is deprecated (connector-agent removed)")
+    return None  # Fallback: no agent status
 
 
 CONNECTOR_TYPE_ALIASES = {

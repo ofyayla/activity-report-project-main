@@ -8,6 +8,7 @@ Use app.services.storage instead for file operations.
 """
 
 from __future__ import annotations
+from dataclasses import dataclass
 from typing import Any
 import logging
 from datetime import datetime, timezone

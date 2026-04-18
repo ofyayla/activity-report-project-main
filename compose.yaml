@@ -1,0 +1,206 @@
+name: sustainability-project
+
+x-backend-shared-env: &backend-shared-env
+  APP_ENV: development
+  DATABASE_ALLOW_LOCAL_DEV: "true"
+  VLLM_BASE_URL: ${VLLM_BASE_URL:-http://localhost:8821/v1}
+  VLLM_API_KEY: ${VLLM_API_KEY:-not-needed}
+  VLLM_TIMEOUT_SECONDS: ${VLLM_TIMEOUT_SECONDS:-180}
+  PGVECTOR_HOST: ${PGVECTOR_HOST:-postgres}
+  PGVECTOR_PORT: ${PGVECTOR_PORT:-5432}
+  PGVECTOR_USER: ${PGVECTOR_USER:-postgres}
+  PGVECTOR_PASSWORD: ${PGVECTOR_PASSWORD:-postgres}
+  PGVECTOR_DATABASE: ${PGVECTOR_DATABASE:-sustainability}
+  PGVECTOR_EMBEDDING_DIMENSION: ${PGVECTOR_EMBEDDING_DIMENSION:-1024}
+  JINA_EMBEDDING_BASE: ${JINA_EMBEDDING_BASE:-https://jina-embedding.aiops.albarakaturk.local}
+  JINA_EMBEDDING_MODEL: ${JINA_EMBEDDING_MODEL:-jina-embedding-v4}
+  REDIS_HOST: ${REDIS_HOST:-redis}
+  REDIS_PORT: ${REDIS_PORT:-6379}
+  REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+  HOCUSPOCUS_HOST: ${HOCUSPOCUS_HOST:-http://localhost:1234}
+  HOCUSPOCUS_WS_URL: ${HOCUSPOCUS_WS_URL:-ws://localhost:1234}
+  STORAGE_USE_LOCAL: ${STORAGE_USE_LOCAL:-true}
+  LOCAL_STORAGE_ROOT: ${LOCAL_STORAGE_ROOT:-apps/api/storage}
+
+services:
+  postgres:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_DB: sustainability
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d sustainability"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: dev
+    working_dir: /workspace/apps/api
+    command:
+      - /bin/sh
+      - -lc
+      - alembic upgrade head && uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    environment:
+      <<: *backend-shared-env
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/sustainability
+      REDIS_URL: redis://redis:6379/0
+      API_PREFIX: ${API_PREFIX:-}
+      API_VERSION: ${API_VERSION:-v1}
+      CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1}
+      ARQ_QUEUE_NAME: ${ARQ_QUEUE_NAME:-arq:queue}
+      ARQ_WORKER_CONCURRENCY: ${ARQ_WORKER_CONCURRENCY:-4}
+      ARQ_JOB_TIMEOUT_SECONDS: ${ARQ_JOB_TIMEOUT_SECONDS:-180}
+      ARQ_JOB_RETRY_COUNT: ${ARQ_JOB_RETRY_COUNT:-3}
+      ARQ_JOB_RETRY_BASE_SECONDS: ${ARQ_JOB_RETRY_BASE_SECONDS:-5}
+      ARQ_JOB_RETRY_MAX_DEFER_SECONDS: ${ARQ_JOB_RETRY_MAX_DEFER_SECONDS:-45}
+      LLM_GENERATION_MAX_TOKENS: ${LLM_GENERATION_MAX_TOKENS:-2048}
+      LLM_GENERATION_TEMPERATURE: ${LLM_GENERATION_TEMPERATURE:-0.7}
+      LLM_BATCH_WORKER_TIMEOUT_SECONDS: ${LLM_BATCH_WORKER_TIMEOUT_SECONDS:-180}
+      LLM_BATCH_WORKER_RETRY_COUNT: ${LLM_BATCH_WORKER_RETRY_COUNT:-3}
+      LLM_BATCH_WORKER_RETRY_BASE_SECONDS: ${LLM_BATCH_WORKER_RETRY_BASE_SECONDS:-5}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-http://minio:9000}
+      MINIO_USE_SSL: ${MINIO_USE_SSL:-false}
+      MINIO_BUCKET_UPLOADS: ${MINIO_BUCKET_UPLOADS:-report-uploads}
+      MINIO_BUCKET_SNAPSHOTS: ${MINIO_BUCKET_SNAPSHOTS:-report-snapshots}
+      HOCUSPOCUS_JWT_SECRET: ${HOCUSPOCUS_JWT_SECRET:-change-in-production}
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+      NEXT_PUBLIC_APP_BASE_URL: ${NEXT_PUBLIC_APP_BASE_URL:-http://localhost:3000}
+      NEXT_PUBLIC_HOCUSPOCUS_URL: ${NEXT_PUBLIC_HOCUSPOCUS_URL:-ws://localhost:1234}
+      REPORT_TEMPLATE_DEFAULT_VERSION: ${REPORT_TEMPLATE_DEFAULT_VERSION:-pivot-v3}
+      REPORT_FACTORY_DEFAULT_LOCALE: ${REPORT_FACTORY_DEFAULT_LOCALE:-tr-TR}
+      REPORT_MAX_SECTION_LENGTH: ${REPORT_MAX_SECTION_LENGTH:-5000}
+      REPORT_AUTO_SAVE_INTERVAL_SECONDS: ${REPORT_AUTO_SAVE_INTERVAL_SECONDS:-60}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      AUDIT_ENABLED: ${AUDIT_ENABLED:-true}
+      AUDIT_RETENTION_DAYS: ${AUDIT_RETENTION_DAYS:-365}
+      HEALTH_CHECK_VLLM_ENABLED: ${HEALTH_CHECK_VLLM_ENABLED:-true}
+      HEALTH_CHECK_PGVECTOR_ENABLED: ${HEALTH_CHECK_PGVECTOR_ENABLED:-true}
+      HEALTH_CHECK_REDIS_ENABLED: ${HEALTH_CHECK_REDIS_ENABLED:-true}
+      HEALTH_CHECK_JINA_ENABLED: ${HEALTH_CHECK_JINA_ENABLED:-true}
+      HEALTH_CHECK_TIMEOUT_SECONDS: ${HEALTH_CHECK_TIMEOUT_SECONDS:-5}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/workspace
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen("http://127.0.0.1:8000/health/ready")
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  worker:
+    build:
+      context: .
+      dockerfile: services/worker/Dockerfile
+      target: dev
+    working_dir: /workspace/services/worker
+    command: ["python", "-m", "arq", "worker.app.WorkerSettings"]
+    environment:
+      <<: *backend-shared-env
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/sustainability
+      REDIS_URL: redis://redis:6379/0
+      ARQ_WORKER_CONCURRENCY: ${ARQ_WORKER_CONCURRENCY:-4}
+      ARQ_QUEUE_NAME: ${ARQ_QUEUE_NAME:-arq:queue}
+      LLM_BATCH_WORKER_TIMEOUT_SECONDS: ${LLM_BATCH_WORKER_TIMEOUT_SECONDS:-180}
+      LLM_BATCH_WORKER_RETRY_COUNT: ${LLM_BATCH_WORKER_RETRY_COUNT:-3}
+      LLM_BATCH_WORKER_RETRY_BASE_SECONDS: ${LLM_BATCH_WORKER_RETRY_BASE_SECONDS:-5}
+      ARQ_JOB_TIMEOUT_SECONDS: ${ARQ_JOB_TIMEOUT_SECONDS:-180}
+      ARQ_JOB_RETRY_COUNT: ${ARQ_JOB_RETRY_COUNT:-3}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    volumes:
+      - .:/workspace
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import os, redis; redis.from_url(os.environ["REDIS_URL"]).ping()
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: dev
+    working_dir: /workspace
+    command: ["pnpm", "--filter", "web", "dev", "--hostname", "0.0.0.0", "--port", "3000"]
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+      NEXT_PUBLIC_APP_BASE_URL: ${NEXT_PUBLIC_APP_BASE_URL:-http://localhost:3000}
+      NEXT_PUBLIC_HOCUSPOCUS_URL: ${NEXT_PUBLIC_HOCUSPOCUS_URL:-ws://localhost:1234}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/workspace
+      - pnpm_store:/pnpm/store
+      - web_root_node_modules:/workspace/node_modules
+      - web_app_node_modules:/workspace/apps/web/node_modules
+      - web_shared_types_node_modules:/workspace/packages/shared-types/node_modules
+      - web_next_cache:/workspace/apps/web/.next
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - 'fetch("http://127.0.0.1:3000").then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+volumes:
+  postgres_data:
+  redis_data:
+  pnpm_store:
+  web_root_node_modules:
+  web_app_node_modules:
+  web_shared_types_node_modules:
+  web_next_cache:

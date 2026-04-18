@@ -1,0 +1,155 @@
+Veni AI Sustainability Cockpit
+Proprietary Software Notice and License Terms
+
+Copyright (c) 2026 Ali Özkan Özdurmuş
+All Rights Reserved.
+
+This repository, together with all source code, object code, documentation,
+designs, prompts, workflows, schemas, configuration, architecture materials,
+images, and other related content made available in or through this project
+(collectively, the "Work"), is proprietary and protected by copyright and
+other intellectual property laws.
+
+Except as expressly stated in this document or in a separate written agreement
+signed by the copyright owner, no right, title, or interest in the Work is
+granted, assigned, or transferred to any person or entity. All rights not
+expressly granted are reserved.
+
+1. Ownership
+
+The Work is owned by Ali Özkan Özdurmuş and/or its applicable licensors.
+Availability of the Work in a source code repository, package registry, build
+artifact, preview environment, or any other distribution channel does not
+constitute a waiver of ownership rights or a grant of any open source license.
+
+2. No Open Source License
+
+The Work is not licensed under any open source or source-available license
+unless a specific file expressly states otherwise. No implied license is
+granted by publication, delivery, access, review, cloning, forking,
+downloading, or use of the Work.
+
+3. Limited Evaluation Permission
+
+Subject to strict compliance with these terms, a natural person or legal entity
+that lawfully receives access to the Work is granted a limited, revocable,
+non-exclusive, non-transferable, non-sublicensable permission to access, view,
+and make the minimum technical copies necessary to inspect the Work solely for
+internal, non-commercial evaluation of the project.
+
+This limited permission does not authorize production use, commercial use,
+customer-facing use, hosting, deployment, redistribution, publication, or any
+other exploitation of the Work.
+
+4. Restrictions
+
+Without prior written permission from the copyright owner, you may not, and may
+not permit any third party to:
+
+- copy, reproduce, republish, publicly display, publicly perform, distribute,
+  transmit, sell, lease, rent, sublicense, assign, or otherwise transfer any
+  portion of the Work;
+- modify, adapt, translate, arrange, transform, annotate, or create derivative
+  works based on the Work;
+- use the Work in production, in a commercial service, for managed hosting, for
+  timesharing, or as part of any product or service offering;
+- remove, alter, obscure, or circumvent any copyright notice, trademark notice,
+  attribution, watermark, audit marker, access control, or technical
+  protection;
+- reverse engineer, decompile, disassemble, or otherwise attempt to derive
+  source code, models, prompts, business rules, or underlying structure from
+  any non-source portions of the Work, except to the limited extent such
+  restriction is prohibited by applicable law;
+- use the Work, or any part of it, to train, tune, ground, benchmark, or
+  improve any machine learning model, agent, rules engine, retrieval system, or
+  competing product;
+- represent the Work, or any modified form of it, as open source, public domain,
+  or generally available for unrestricted use.
+
+5. Commercial Use Prohibited
+
+Any commercial exploitation of the Work is strictly prohibited unless expressly
+authorized in a separate written agreement. Commercial exploitation includes,
+without limitation, internal business deployment, consulting delivery,
+outsourcing, white-labeling, resale, hosted access, API exposure, and any use
+that supports revenue generation, paid services, or commercial operations.
+
+6. Confidentiality and Access Expectations
+
+If you obtain access to any non-public version of the Work, you must treat the
+Work and all related non-public information as confidential and use at least
+reasonable care to prevent unauthorized disclosure. No access right includes a
+right to share the Work with contractors, affiliates, agents, or service
+providers unless separately authorized in writing.
+
+7. Contributions and Feedback
+
+No contribution, pull request, patch, issue submission, suggestion, model
+prompt, documentation edit, or other feedback is accepted under any implied
+open source contribution model.
+
+If the copyright owner accepts a contribution or feedback from you, that
+acceptance does not create any ownership transfer in your favor and does not
+modify the proprietary status of the Work. Any accepted contribution or
+feedback may be subject to separate written terms, including assignment,
+license, or contributor agreement terms.
+
+8. Third-Party Components
+
+Certain files, dependencies, assets, fonts, libraries, or tools referenced by
+the Work may be owned by third parties and may be subject to separate license
+terms. Those components remain governed by their respective licenses. This
+document applies only to the portions of the Work controlled by the copyright
+owner and does not diminish any obligation to comply with third-party terms.
+
+9. Trademarks and Branding
+
+No right is granted to use any trade name, product name, logo, service mark,
+brand asset, domain name, or other source identifier associated with the Work,
+except for nominative reference strictly necessary to identify the Work and
+only in a manner that does not imply endorsement, affiliation, or permission.
+
+10. Termination
+
+Any unauthorized use of the Work automatically terminates any limited
+permission granted under this document. Upon termination, you must immediately
+cease use of the Work and destroy or permanently delete all copies in your
+possession or control, except to the extent retention is required by applicable
+law.
+
+11. Reservation of Remedies
+
+Unauthorized use, copying, disclosure, or distribution of the Work may cause
+irreparable harm for which monetary damages may be inadequate. The copyright
+owner reserves all legal and equitable remedies, including injunctive relief,
+specific performance, damages, and recovery of costs, to the fullest extent
+permitted by law.
+
+12. Disclaimer of Warranties
+
+THE WORK IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT WARRANTIES OF ANY
+KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING ANY IMPLIED
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE,
+NON-INFRINGEMENT, ACCURACY, AVAILABILITY, OR ERROR-FREE OPERATION.
+
+13. Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE
+COPYRIGHT OWNER OR ANY LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR FOR ANY LOSS OF
+DATA, PROFITS, REVENUE, BUSINESS, GOODWILL, OR ANTICIPATED SAVINGS, ARISING
+OUT OF OR RELATING TO ACCESS TO, USE OF, OR INABILITY TO USE THE WORK, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+14. Governing Priority
+
+If a separate written agreement signed by the copyright owner expressly grants
+you additional rights to the Work, that agreement controls solely to the extent
+of a direct conflict with this document. Otherwise, this document remains in
+full force and effect.
+
+15. Permission Requests
+
+Any license, waiver, exception, production-use right, commercial-use right, or
+redistribution permission must be granted in advance in a separate written
+agreement signed by the copyright owner.
